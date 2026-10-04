@@ -16,6 +16,7 @@ import {
 import { useApp } from '../context/AppContext';
 import { DataSourceBadge } from '../components/common/DataSourceBadge';
 import { DATA_SOURCES } from '../data/mockData';
+import { BackButton } from '../components/common/BackButton';
 
 interface Props {
   setActivePage: (page: string) => void;
@@ -47,7 +48,12 @@ export const FamilySummaryPage: React.FC<Props> = ({ setActivePage }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Top Back Row */}
+      <div className="flex items-center justify-between">
+        <BackButton label="Back" />
+      </div>
+
       {/* Top Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
         <div>

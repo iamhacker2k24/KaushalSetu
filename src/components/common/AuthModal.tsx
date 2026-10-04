@@ -7,6 +7,7 @@ import {
   Phone, 
   Lock, 
   ArrowRight, 
+  ArrowLeft,
   GraduationCap, 
   HeartHandshake, 
   Sparkles,
@@ -220,7 +221,17 @@ export const AuthModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
                   className="w-full px-3.5 py-2.5 rounded-xl border border-brand-500 text-center font-bold text-base tracking-widest text-slate-900 bg-brand-50/30"
                   required
                 />
-                <span className="text-[10px] text-slate-400 block text-right">Demo OTP auto-filled: 1234</span>
+                <div className="flex justify-between items-center text-[10px] pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setOtpSent(false)}
+                    className="text-brand-600 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <ArrowLeft className="w-3 h-3" />
+                    <span>Change phone number / Back</span>
+                  </button>
+                  <span className="text-slate-400">Demo OTP: 1234</span>
+                </div>
               </div>
             )}
 

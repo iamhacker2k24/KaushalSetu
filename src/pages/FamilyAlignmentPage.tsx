@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { AlignmentMeter } from '../components/common/AlignmentMeter';
+import { BackButton } from '../components/common/BackButton';
 
 interface Props {
   setActivePage: (page: string) => void;
@@ -21,7 +22,12 @@ export const FamilyAlignmentPage: React.FC<Props> = ({ setActivePage }) => {
   const { profile, selectedTrade, setActiveEscalationModal } = useApp();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Top Back Row */}
+      <div className="flex items-center justify-between">
+        <BackButton label="Back" />
+      </div>
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>

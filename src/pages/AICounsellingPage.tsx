@@ -23,6 +23,7 @@ import { ConcernBadge } from '../components/common/ConcernBadge';
 import { VoiceButton } from '../components/common/VoiceButton';
 import { DataSourceBadge } from '../components/common/DataSourceBadge';
 import { MOCK_TRADES, DATA_SOURCES } from '../data/mockData';
+import { BackButton } from '../components/common/BackButton';
 
 interface Props {
   setActivePage: (page: string) => void;
@@ -84,6 +85,14 @@ export const AICounsellingPage: React.FC<Props> = ({ setActivePage }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4">
+      {/* Top Back Row */}
+      <div className="flex items-center justify-between">
+        <BackButton label="Back" />
+        <span className="text-xs font-semibold text-slate-500 hidden sm:inline">
+          AI-Assisted Family Vocational Consultation
+        </span>
+      </div>
+
       {/* Top Banner: Ecosystem Notice & Selected Trade Switcher */}
       <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-card flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">

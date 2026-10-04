@@ -17,6 +17,7 @@ import {
 import { useApp } from '../context/AppContext';
 import { MOCK_TRADES } from '../data/mockData';
 import { DataSourceBadge } from '../components/common/DataSourceBadge';
+import { BackButton } from '../components/common/BackButton';
 
 interface Props {
   setActivePage: (page: string) => void;
@@ -37,7 +38,12 @@ export const CareerPathwaySimulatorPage: React.FC<Props> = ({ setActivePage }) =
   const trainingMultiplier = simulationTrainingType === 'Polytechnic' ? 1.2 : simulationTrainingType === 'PMKVY' ? 0.9 : 1.0;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Top Back Row */}
+      <div className="flex items-center justify-between">
+        <BackButton label="Back to Trades" onClick={() => setActivePage('trades')} />
+      </div>
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
