@@ -14,7 +14,8 @@ import {
   BarChart3, 
   ChevronDown, 
   Sparkles, 
-  UserCheck
+  UserCheck,
+  ArrowLeft
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { LanguageCode } from '../../types';
@@ -32,7 +33,7 @@ interface NavLinkItem {
 }
 
 export const Navbar: React.FC<Props> = ({ activePage, setActivePage }) => {
-  const { language, setLanguage, t, setActiveEscalationModal, profile, setIsAuthModalOpen, currentUser } = useApp();
+  const { language, setLanguage, t, setActiveEscalationModal, profile, setIsAuthModalOpen, currentUser, goBack, canGoBack } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
@@ -144,29 +145,59 @@ export const Navbar: React.FC<Props> = ({ activePage, setActivePage }) => {
         {/* Main Navbar Bar */}
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 w-full">
           
-          {/* Brand Logo */}
-          <div 
-            onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2.5 cursor-pointer group select-none shrink-0"
-          >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-brand-700 via-brand-600 to-indigo-800 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200 shrink-0">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 48 48" fill="none">
-                <path d="M8 36C14 26 22 22 28 22C34 22 40 26 44 36" stroke="#F59E0B" strokeWidth="4" strokeLinecap="round" />
-                <circle cx="28" cy="14" r="7" fill="#10B981" />
-                <path d="M16 16C16 12 21 8 28 8C35 8 40 12 40 16" stroke="white" strokeWidth="3" strokeLinecap="round" />
-                <path d="M6 40H44" stroke="white" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div className="shrink-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight font-display">
-                  Kaushal<span className="text-brand-600">Setu</span>
-                </span>
-                <span className="hidden sm:inline-block text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full uppercase border border-emerald-300">
-                  Gov Verified
-                </span>
+          {/* Brand Logo & Back Controls */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Mobile / Tablet Back Button */}
+            {activePage !== 'home' && (
+              <button
+                type="button"
+                onClick={goBack}
+                className="lg:hidden p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-brand-50 hover:border-brand-300 text-slate-700 hover:text-brand-700 transition-all shadow-2xs shrink-0 cursor-pointer flex items-center justify-center active:scale-95"
+                title="Go back to previous page"
+                aria-label="Go back to previous page"
+              >
+                <ArrowLeft className="w-4 h-4 text-slate-700" />
+              </button>
+            )}
+
+            {/* Brand Logo */}
+            <div 
+              onClick={() => handleNavClick('home')}
+              className="flex items-center gap-2.5 cursor-pointer group select-none shrink-0"
+            >
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-brand-700 via-brand-600 to-indigo-800 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200 shrink-0">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 48 48" fill="none">
+                  <path d="M8 36C14 26 22 22 28 22C34 22 40 26 44 36" stroke="#F59E0B" strokeWidth="4" strokeLinecap="round" />
+                  <circle cx="28" cy="14" r="7" fill="#10B981" />
+                  <path d="M16 16C16 12 21 8 28 8C35 8 40 12 40 16" stroke="white" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M6 40H44" stroke="white" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className="shrink-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight font-display">
+                    Kaushal<span className="text-brand-600">Setu</span>
+                  </span>
+                  <span className="hidden sm:inline-block text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full uppercase border border-emerald-300">
+                    Gov Verified
+                  </span>
+                </div>
               </div>
             </div>
+
+            {/* Desktop Quick Back Button */}
+            {activePage !== 'home' && (
+              <button
+                type="button"
+                onClick={goBack}
+                className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-brand-50 hover:border-brand-300 text-slate-700 hover:text-brand-700 text-xs font-bold transition-all shadow-2xs group cursor-pointer shrink-0 ml-1 active:scale-95"
+                title="Go back to previous page"
+                aria-label="Go back to previous page"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-1 text-slate-500 group-hover:text-brand-600" />
+                <span>Back</span>
+              </button>
+            )}
           </div>
 
           {/* Desktop Navigation Links (Visible on lg and above) */}
@@ -368,8 +399,28 @@ export const Navbar: React.FC<Props> = ({ activePage, setActivePage }) => {
           />
 
           {/* Slide Down Sheet */}
-          <div className="fixed top-[88px] sm:top-[96px] left-0 right-0 max-h-[calc(100vh-6.5rem)] overflow-y-auto bg-white border-b border-slate-200 px-4 py-4 space-y-4 shadow-2xl z-50 animate-fadeIn">
+          <div className="fixed top-[88px] sm:top-[96px] left-0 right-0 max-h-[calc(100vh-6.5rem)] overflow-y-auto bg-white border-b border-slate-200 px-4 py-4 space-y-3 shadow-2xl z-50 animate-fadeIn">
             
+            {/* Quick Back Option in Mobile Menu */}
+            {activePage !== 'home' && (
+              <button
+                type="button"
+                onClick={() => {
+                  goBack();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-between p-2.5 bg-brand-50 hover:bg-brand-100 text-brand-900 border border-brand-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer group active:scale-95"
+              >
+                <div className="flex items-center gap-2">
+                  <ArrowLeft className="w-4 h-4 text-brand-600 transition-transform group-hover:-translate-x-1" />
+                  <span>Go Back to Previous Screen</span>
+                </div>
+                <span className="text-[10px] bg-white px-2 py-0.5 rounded-full text-brand-700 font-bold border border-brand-200 shadow-2xs">
+                  Back
+                </span>
+              </button>
+            )}
+
             {/* Profile Card */}
             <div className="p-3.5 bg-gradient-to-r from-brand-50 to-indigo-50 border border-brand-100 rounded-2xl flex items-center justify-between">
               <div>

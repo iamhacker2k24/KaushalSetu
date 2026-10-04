@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   FamilyProfile, 
   LanguageCode, 
@@ -41,6 +41,11 @@ interface AppContextType {
   setIsAuthModalOpen: (open: boolean) => void;
   currentUser: AuthUser | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<AuthUser | null>>;
+  activePage: string;
+  setActivePage: (page: string) => void;
+  goBack: () => void;
+  canGoBack: boolean;
+  pageHistory: string[];
 }
 
 const defaultProfile: FamilyProfile = {
@@ -123,6 +128,88 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     location: 'Varanasi, UP',
     isLoggedIn: true
   });
+
+  // Navigation stack and browser history integration
+  const getInitialPage = (): string => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hashPage = window.location.hash.replace('#', '');
+      const validPages = [
+        'home', 'assessment', 'onboarding', 'counselling', 'trades', 
+        'pathways', 'compare', 'market', 'alignment', 'counsellors', 
+        'summary', 'admin'
+      ];
+      if (validPages.includes(hashPage)) {
+        return hashPage;
+      }
+    }
+    return 'home';
+  };
+
+  const [activePage, setActivePageState] = useState<string>(getInitialPage);
+  const [pageHistory, setPageHistory] = useState<string[]>([getInitialPage()]);
+
+  // Navigate to a new page
+  const setActivePage = useCallback((page: string) => {
+    setActivePageState(prevActive => {
+      if (prevActive === page) return prevActive;
+      
+      setPageHistory(prevHist => [...prevHist, page]);
+      
+      if (typeof window !== 'undefined') {
+        window.history.pushState({ page }, '', `#${page}`);
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+      return page;
+    });
+  }, []);
+
+  // Robust goBack function that pops history or falls back safely to 'home'
+  const goBack = useCallback(() => {
+    setPageHistory(prevHist => {
+      if (prevHist.length > 1) {
+        const nextHist = prevHist.slice(0, -1);
+        const prevPage = nextHist[nextHist.length - 1] || 'home';
+        setActivePageState(prevPage);
+        if (typeof window !== 'undefined') {
+          window.history.pushState({ page: prevPage }, '', `#${prevPage}`);
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+        return nextHist;
+      } else {
+        setActivePageState('home');
+        if (typeof window !== 'undefined') {
+          window.history.pushState({ page: 'home' }, '', '#home');
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+        return ['home'];
+      }
+    });
+  }, []);
+
+  // Sync with browser Back and Forward buttons (popstate event)
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const pageFromState = event.state?.page;
+      const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
+      const targetPage = pageFromState || hash || 'home';
+      
+      setActivePageState(targetPage);
+      setPageHistory(prev => {
+        if (prev.length > 1) {
+          return prev.slice(0, -1);
+        }
+        return [targetPage];
+      });
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const canGoBack = activePage !== 'home' || pageHistory.length > 1;
 
   const t = TRANSLATIONS[language];
 
@@ -368,7 +455,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isAuthModalOpen,
         setIsAuthModalOpen,
         currentUser,
-        setCurrentUser
+        setCurrentUser,
+        activePage,
+        setActivePage,
+        goBack,
+        canGoBack,
+        pageHistory
       }}
     >
       {children}

@@ -29,13 +29,14 @@ import { MOCK_TRADES, DATA_SOURCES } from '../data/mockData';
 import { Trade, AssessmentMatchResult } from '../types';
 import { VoiceButton } from '../components/common/VoiceButton';
 import { DataSourceBadge } from '../components/common/DataSourceBadge';
+import { BackButton } from '../components/common/BackButton';
 
 interface Props {
   setActivePage: (page: string) => void;
 }
 
 export const FamilyAssessmentWizard: React.FC<Props> = ({ setActivePage }) => {
-  const { setSelectedTrade, profile, setProfile, setActiveEscalationModal } = useApp();
+  const { setSelectedTrade, profile, setProfile, setActiveEscalationModal, goBack } = useApp();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({
@@ -210,7 +211,25 @@ export const FamilyAssessmentWizard: React.FC<Props> = ({ setActivePage }) => {
 
       {/* State B: RESULT DASHBOARD (Requested: "after some time show proper users result then show all the stuffs show market real timedashboard prediction etc") */}
       {!isAnalyzing && assessmentResult && (
-        <div className="space-y-8 animate-fadeIn">
+        <div className="space-y-6 animate-fadeIn">
+          {/* Top Navigation Bar on Results Screen */}
+          <div className="flex items-center justify-between gap-3">
+            <BackButton 
+              label="Back to Questions" 
+              onClick={() => {
+                setAssessmentResult(null);
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }} 
+            />
+            <button
+              type="button"
+              onClick={() => setActivePage('home')}
+              className="text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors cursor-pointer flex items-center gap-1"
+            >
+              <span>Back to Home</span>
+            </button>
+          </div>
+
           {/* Top Congratulatory Banner */}
           <div className="bg-gradient-to-r from-brand-700 via-brand-600 to-indigo-800 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
@@ -410,6 +429,14 @@ export const FamilyAssessmentWizard: React.FC<Props> = ({ setActivePage }) => {
       {/* State C: INTERACTIVE QUESTIONNAIRE (Step by step: Student Qs then Parent Qs) */}
       {!isAnalyzing && !assessmentResult && (
         <div className="space-y-3 sm:space-y-3.5">
+          {/* Top Quick Back Row */}
+          <div className="flex items-center justify-between gap-3">
+            <BackButton label="Back" />
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">
+              Family Vocational Match Wizard
+            </span>
+          </div>
+
           {/* Progress Header */}
           <div className="bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-3 border border-slate-200 shadow-2xs flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
@@ -499,13 +526,23 @@ export const FamilyAssessmentWizard: React.FC<Props> = ({ setActivePage }) => {
             <div className="flex items-center justify-between pt-3 border-t border-slate-100">
               {currentQuestionIndex > 0 ? (
                 <button
+                  type="button"
                   onClick={handlePrev}
-                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="w-4 h-4 text-slate-600" />
                   <span>Previous</span>
                 </button>
-              ) : <div />}
+              ) : (
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
+                >
+                  <ArrowLeft className="w-4 h-4 text-slate-600" />
+                  <span>Back to Home</span>
+                </button>
+              )}
 
               <button
                 onClick={handleNext}

@@ -13,13 +13,14 @@ import {
 import { useApp } from '../context/AppContext';
 import { UserRole, AcademicLevel, ParentConcernCategory, RegionType, LanguageCode } from '../types';
 import { CONCERN_CATEGORIES } from '../data/mockData';
+import { BackButton } from '../components/common/BackButton';
 
 interface Props {
   setActivePage: (page: string) => void;
 }
 
 export const FamilyOnboardingPage: React.FC<Props> = ({ setActivePage }) => {
-  const { profile, setProfile, setLanguage } = useApp();
+  const { profile, setProfile, setLanguage, goBack } = useApp();
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Form State
@@ -118,19 +119,22 @@ export const FamilyOnboardingPage: React.FC<Props> = ({ setActivePage }) => {
   return (
     <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-4 space-y-2.5 sm:space-y-3">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-2">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">
-              Onboarding
-            </span>
-            <h1 className="text-base sm:text-xl font-extrabold text-slate-900 font-display">
-              Set Up Your Family Counselling Profile
-            </h1>
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-2">
+        <div className="flex items-center gap-3">
+          <BackButton label="Back" />
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">
+                Onboarding
+              </span>
+              <h1 className="text-base sm:text-xl font-extrabold text-slate-900 font-display">
+                Set Up Your Family Counselling Profile
+              </h1>
+            </div>
+            <p className="text-[11px] text-slate-500 hidden sm:block">
+              Tailor verified government career benchmarks to your family's exact goals and concerns.
+            </p>
           </div>
-          <p className="text-[11px] text-slate-500 hidden sm:block">
-            Tailor verified government career benchmarks to your family's exact goals and concerns.
-          </p>
         </div>
 
         {/* Compact Progress indicator */}
@@ -646,13 +650,23 @@ export const FamilyOnboardingPage: React.FC<Props> = ({ setActivePage }) => {
         <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-3">
           {currentStep > 1 ? (
             <button
+              type="button"
               onClick={handleBack}
-              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 text-slate-600" />
               <span>Back</span>
             </button>
-          ) : <div />}
+          ) : (
+            <button
+              type="button"
+              onClick={goBack}
+              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-600" />
+              <span>Back to Home</span>
+            </button>
+          )}
 
           <button
             onClick={handleNext}

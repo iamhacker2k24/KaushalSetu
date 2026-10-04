@@ -21,8 +21,7 @@ import { FamilySummaryPage } from './pages/FamilySummaryPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
 function AppContent() {
-  const [activePage, setActivePage] = useState<string>('home');
-  const { isAuthModalOpen, setIsAuthModalOpen } = useApp();
+  const { activePage, setActivePage, isAuthModalOpen, setIsAuthModalOpen } = useApp();
 
   // Ensure scroll position is cleanly reset to top on every page change
   useEffect(() => {
